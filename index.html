@@ -1,0 +1,2081 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+  <meta name="description" content="DonQy – Burritos & Sandwiches en Pozuelo de Alarcón. Menú completo, pedidos a domicilio por Uber Eats y Just Eat." />
+  <title>DonQy – Burritos & Sandwiches | Pozuelo de Alarcón</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════════════════ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --orange:       #FF5500;
+      --orange-deep:  #CC4200;
+      --orange-glow:  rgba(255, 85, 0, 0.35);
+      --orange-faint: rgba(255, 85, 0, 0.08);
+      --black:        #0D0600;
+      --dark:         #140800;
+      --dark-mid:     #1E0D00;
+      --dark-card:    rgba(255,255,255,0.035);
+      --border:       rgba(255,255,255,0.07);
+      --border-warm:  rgba(255,85,0,0.25);
+      --text:         #FFFFFF;
+      --text-muted:   rgba(255,255,255,0.55);
+      --text-dim:     rgba(255,255,255,0.28);
+      --cream:        #FFF6EE;
+
+      --radius-sm:    10px;
+      --radius-md:    16px;
+      --radius-lg:    24px;
+      --radius-pill:  999px;
+
+      --transition:   0.25s cubic-bezier(0.4,0,0.2,1);
+      --shadow-orange: 0 12px 48px rgba(255,85,0,0.3);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; }
+
+    /* ═══════════════════════════════════════════════════
+       LAYOUT HELPERS
+    ═══════════════════════════════════════════════════ */
+    .wrap {
+      max-width: 1200px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 3rem);
+    }
+
+    section {
+      padding-block: clamp(4rem, 8vw, 7rem);
+    }
+
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-eyebrow::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--orange);
+      border-radius: 2px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+      line-height: 0.95;
+      letter-spacing: 1.5px;
+    }
+
+    .section-subtitle {
+      margin-top: 1rem;
+      font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+      color: var(--text-muted);
+      max-width: 520px;
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       ANIMATIONS
+    ═══════════════════════════════════════════════════ */
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes heroScale {
+      from { transform: scale(1.04); }
+      to   { transform: scale(1.12); }
+    }
+
+    @keyframes floatBounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(8px); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,85,0,0); }
+      50%       { box-shadow: 0 0 32px 8px rgba(255,85,0,0.25); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+
+    /* ═══════════════════════════════════════════════════
+       NAVIGATION
+    ═══════════════════════════════════════════════════ */
+    #navbar {
+      position: fixed;
+      inset-block-start: 0;
+      inset-inline: 0;
+      z-index: 900;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      padding-inline: clamp(1.25rem, 5vw, 3rem);
+      background: rgba(13,6,0,0.75);
+      backdrop-filter: blur(20px) saturate(1.4);
+      -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      border-bottom: 1px solid rgba(255,85,0,0.12);
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    #navbar.scrolled {
+      background: rgba(13,6,0,0.95);
+      border-bottom-color: rgba(255,85,0,0.22);
+    }
+
+    .nav-inner {
+      width: 100%;
+      max-width: 1200px;
+      margin-inline: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.85rem;
+      letter-spacing: 4px;
+      color: var(--orange);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .nav-logo em {
+      color: rgba(255,255,255,0.55);
+      font-style: normal;
+      font-size: 0.85em;
+      letter-spacing: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: clamp(1rem, 2.5vw, 2rem);
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      transition: color var(--transition);
+      white-space: nowrap;
+    }
+
+    .nav-links a:hover { color: var(--orange); }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--orange);
+      color: #fff !important;
+      padding: 0.55rem 1.25rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.78rem !important;
+      font-weight: 700 !important;
+      letter-spacing: 1px !important;
+      transition: background var(--transition), transform var(--transition);
+      white-space: nowrap;
+    }
+
+    .nav-cta:hover {
+      background: var(--orange-deep);
+      transform: translateY(-1px);
+    }
+
+    /* Hamburger */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile drawer */
+    #nav-drawer {
+      position: fixed;
+      inset-block-start: 68px;
+      inset-inline: 0;
+      z-index: 850;
+      background: rgba(13,6,0,0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+      border-bottom: 1px solid var(--border-warm);
+    }
+
+    #nav-drawer.open {
+      max-height: 420px;
+    }
+
+    #nav-drawer a {
+      display: block;
+      padding: 1.1rem clamp(1.25rem, 5vw, 3rem);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: color var(--transition), background var(--transition);
+    }
+
+    #nav-drawer a:hover, #nav-drawer a:last-child {
+      color: var(--orange);
+      background: var(--orange-faint);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════════ */
+    #hero {
+      position: relative;
+      min-height: 100svh;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=1800&q=85&auto=format');
+      background-size: cover;
+      background-position: center 30%;
+      animation: heroScale 14s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, rgba(13,6,0,0.96) 0%, rgba(13,6,0,0.78) 55%, rgba(13,6,0,0.35) 100%),
+        linear-gradient(to bottom, rgba(13,6,0,0.3) 0%, transparent 40%, rgba(13,6,0,0.6) 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      padding-block-start: 68px;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 3rem);
+      padding-block: clamp(4rem, 10vh, 7rem);
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,85,0,0.18);
+      border: 1px solid rgba(255,85,0,0.35);
+      color: var(--orange);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-pill);
+      margin-bottom: 1.75rem;
+      animation: fadeSlideDown 0.8s 0.1s both ease;
+    }
+
+    .hero-tag svg { flex-shrink: 0; }
+
+    .hero-h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 14vw, 11rem);
+      line-height: 0.88;
+      letter-spacing: 3px;
+      animation: fadeSlideDown 0.9s 0.15s both ease;
+    }
+
+    .hero-h1 .accent { color: var(--orange); }
+
+    .hero-tagline {
+      margin-top: 1.75rem;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(255,255,255,0.72);
+      max-width: 500px;
+      line-height: 1.65;
+      animation: fadeSlideDown 0.9s 0.22s both ease;
+    }
+
+    .hero-address {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.38);
+      animation: fadeSlideDown 0.9s 0.28s both ease;
+    }
+
+    .hero-address svg { color: var(--orange); flex-shrink: 0; }
+
+    /* Hero action buttons */
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.875rem;
+      margin-top: 2.5rem;
+      animation: fadeSlideDown 0.9s 0.34s both ease;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      padding: 0.875rem 1.75rem;
+      border-radius: var(--radius-pill);
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn-orange {
+      background: var(--orange);
+      color: #fff;
+      box-shadow: 0 6px 28px rgba(255,85,0,0.38);
+    }
+
+    .btn-orange:hover {
+      background: var(--orange-deep);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(255,85,0,0.5);
+    }
+
+    .btn-ghost {
+      border: 1.5px solid rgba(255,255,255,0.22);
+      color: rgba(255,255,255,0.85);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    /* Delivery pills row */
+    .hero-delivery {
+      margin-top: 3rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.875rem;
+      animation: fadeSlideDown 0.9s 0.42s both ease;
+    }
+
+    .hero-delivery-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .platform-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.1rem 0.55rem 0.65rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: all var(--transition);
+    }
+
+    .platform-pill:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    .pill-uber { background: #06C167; color: #fff; }
+    .pill-justeat { background: #FF4500; color: #fff; }
+
+.pill-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.pill-logo img {
+  width: 20px;
+  height: 20px;
+  display: block;
+  object-fit: contain;
+}
+
+    /* Scroll cue */
+    .scroll-cue {
+      position: absolute;
+      bottom: 2.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      color: rgba(255,255,255,0.28);
+      font-size: 0.62rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      animation: floatBounce 2.2s ease-in-out infinite;
+      z-index: 3;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       STATS STRIP
+    ═══════════════════════════════════════════════════ */
+    #stats {
+      background: var(--orange);
+      padding-block: 0;
+    }
+
+    .stats-inner {
+      max-width: 1200px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 3rem);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+      gap: 0;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2.25rem 1rem;
+      border-right: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 4vw, 3rem);
+      line-height: 1;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    .stat-lbl {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      margin-top: 0.3rem;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       MENU SECTION
+    ═══════════════════════════════════════════════════ */
+    #menu { background: var(--dark-mid); }
+
+    /* Category tabs */
+    .cat-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-block: 2.25rem 2.5rem;
+    }
+
+    .cat-tab {
+      padding: 0.5rem 1.15rem;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all var(--transition);
+    }
+
+    .cat-tab:hover {
+      border-color: rgba(255,85,0,0.45);
+      color: rgba(255,255,255,0.85);
+    }
+
+    .cat-tab.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(255,85,0,0.3);
+    }
+
+    /* Menu grid */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+      gap: 1.25rem;
+    }
+
+    .menu-card {
+      background: var(--dark-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-warm);
+      box-shadow: 0 16px 48px rgba(255,85,0,0.12);
+    }
+
+    .menu-card.hidden {
+      display: none;
+    }
+
+    .card-img-wrap {
+      position: relative;
+      overflow: hidden;
+      height: 190px;
+      flex-shrink: 0;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .menu-card:hover .card-img { transform: scale(1.07); }
+
+    .card-badge {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      background: var(--orange);
+      color: #fff;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-pill);
+    }
+
+    .card-body {
+      padding: 1.2rem 1.2rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      flex: 1;
+    }
+
+    .card-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.25;
+    }
+
+    .card-desc {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.42);
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .card-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.2rem;
+      margin-top: 0.5rem;
+    }
+
+    .card-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.65rem;
+      color: var(--orange);
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+
+    .card-price-cents {
+      font-size: 1rem;
+      color: rgba(255,85,0,0.75);
+      font-family: 'Bebas Neue', sans-serif;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       DRINKS SECTION
+    ═══════════════════════════════════════════════════ */
+    #bebidas { background: var(--dark); }
+
+    .drinks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(230px, 100%), 1fr));
+      gap: 0.6rem;
+      margin-top: 2.5rem;
+    }
+
+    .drink-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.875rem 1.1rem;
+      background: var(--dark-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .drink-item:hover {
+      border-color: var(--border-warm);
+      background: var(--orange-faint);
+    }
+
+    .drink-name {
+      font-size: 0.83rem;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.3;
+    }
+
+    .drink-price {
+      font-weight: 700;
+      font-size: 0.83rem;
+      color: var(--orange);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       GALLERY
+    ═══════════════════════════════════════════════════ */
+    #galeria {
+      background: var(--dark-mid);
+      padding-block: 0;
+      overflow: hidden;
+    }
+
+    .gallery-header {
+      padding-block-start: clamp(4rem, 8vw, 7rem);
+      padding-inline: clamp(1.25rem, 5vw, 3rem);
+      max-width: 1200px;
+      margin-inline: auto;
+      padding-block-end: 2.5rem;
+    }
+
+    .gallery-scroll-track {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-inline: clamp(1.25rem, 5vw, 3rem);
+      padding-block-end: clamp(4rem, 8vw, 7rem);
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .gallery-scroll-track::-webkit-scrollbar { display: none; }
+
+    .gallery-card {
+      flex-shrink: 0;
+      width: clamp(240px, 32vw, 340px);
+      height: clamp(300px, 40vw, 420px);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      scroll-snap-align: start;
+      border: 1px solid var(--border);
+    }
+
+    .gallery-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .gallery-card:hover img { transform: scale(1.07); }
+
+    .gallery-card-caption {
+      position: absolute;
+      inset-block-end: 0;
+      inset-inline: 0;
+      padding: 1.5rem 1.25rem 1.25rem;
+      background: linear-gradient(transparent, rgba(13,6,0,0.88));
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       ORDER SECTION
+    ═══════════════════════════════════════════════════ */
+    #pedir { background: var(--dark); }
+
+    .order-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+      gap: 1.25rem;
+      margin-top: 3rem;
+    }
+
+    .order-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      padding: 2.25rem 2rem;
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
+      overflow: hidden;
+    }
+
+    .order-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      transition: background var(--transition);
+    }
+
+    .order-card:hover { transform: translateY(-6px); }
+    .order-card:hover::after { background: rgba(255,255,255,0.05); }
+
+    .oc-uber {
+      background: linear-gradient(140deg, #06C167 0%, #059952 100%);
+      box-shadow: 0 8px 40px rgba(6,193,103,0.28);
+    }
+
+    .oc-uber:hover { box-shadow: 0 18px 56px rgba(6,193,103,0.42); }
+
+    .oc-justeat {
+      background: linear-gradient(140deg, #FF4500 0%, #cc3700 100%);
+      box-shadow: 0 8px 40px rgba(255,69,0,0.3);
+    }
+
+    .oc-justeat:hover { box-shadow: 0 18px 56px rgba(255,69,0,0.48); }
+
+    .oc-whatsapp {
+      background: linear-gradient(140deg, #25D366 0%, #1aae52 100%);
+      box-shadow: 0 8px 40px rgba(37,211,102,0.28);
+    }
+
+    .oc-whatsapp:hover { box-shadow: 0 18px 56px rgba(37,211,102,0.42); }
+
+    .oc-top {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .oc-icon-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .oc-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .oc-brand {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .oc-desc {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .oc-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      align-self: flex-start;
+      padding: 0.55rem 1.1rem;
+      background: rgba(255,255,255,0.18);
+      border-radius: var(--radius-pill);
+      transition: background var(--transition);
+    }
+
+    .order-card:hover .oc-cta { background: rgba(255,255,255,0.28); }
+
+    /* ═══════════════════════════════════════════════════
+       LOCATION SECTION
+    ═══════════════════════════════════════════════════ */
+    #ubicacion { background: var(--dark-mid); }
+
+    .location-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: center;
+      margin-top: 3rem;
+    }
+
+    .loc-info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .loc-info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .loc-info-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background: var(--orange-faint);
+      border: 1px solid var(--border-warm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--orange);
+    }
+
+    .loc-info-text strong {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 0.25rem;
+    }
+
+    .loc-info-text span {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.88);
+      line-height: 1.5;
+    }
+
+    .loc-action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    .map-wrap {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border-warm);
+      height: 400px;
+      background: var(--dark-card);
+    }
+
+    .map-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      filter: saturate(0.6) brightness(0.85);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       CTA BANNER
+    ═══════════════════════════════════════════════════ */
+    #cta-banner {
+      background: var(--orange);
+      padding-block: clamp(4rem, 8vw, 6rem);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #cta-banner::before {
+      content: 'DONQY';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(8rem, 20vw, 18rem);
+      letter-spacing: 10px;
+      color: rgba(255,255,255,0.07);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .cta-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 3rem);
+    }
+
+    .cta-inner h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      letter-spacing: 2px;
+      color: #fff;
+      line-height: 0.95;
+    }
+
+    .cta-inner p {
+      margin-block: 1.25rem 2.5rem;
+      font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+      color: rgba(255,255,255,0.82);
+      line-height: 1.6;
+    }
+
+    .cta-btns {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.875rem;
+    }
+
+    .btn-white {
+      background: #fff;
+      color: var(--orange);
+      font-weight: 800;
+    }
+
+    .btn-white:hover {
+      background: rgba(255,255,255,0.88);
+      transform: translateY(-2px);
+    }
+
+    .btn-white-ghost {
+      border: 2px solid rgba(255,255,255,0.5);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .btn-white-ghost:hover {
+      border-color: #fff;
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+
+    /* ═══════════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════════ */
+    footer {
+      background: var(--black);
+      padding-block: 3.5rem 2rem;
+      border-top: 1px solid rgba(255,85,0,0.12);
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 3rem);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      letter-spacing: 5px;
+      color: var(--orange);
+      line-height: 1;
+    }
+
+    .footer-logo span { color: var(--text-dim); }
+
+    .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.25rem 2rem;
+      list-style: none;
+    }
+
+    .footer-nav a {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: color var(--transition);
+    }
+
+    .footer-nav a:hover { color: var(--orange); }
+
+    .footer-socials {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .social-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.5);
+      transition: all var(--transition);
+    }
+
+    .social-icon:hover {
+      background: var(--orange-faint);
+      border-color: var(--border-warm);
+      color: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .footer-legal {
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.14);
+      max-width: 540px;
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       TOAST
+    ═══════════════════════════════════════════════════ */
+    #toast {
+      position: fixed;
+      bottom: 1.75rem;
+      right: 1.75rem;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.9rem 1.25rem;
+      background: rgba(20,8,0,0.96);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      transform: translateY(calc(100% + 2rem));
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none;
+      max-width: min(90vw, 320px);
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+
+      .location-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .map-wrap { height: 280px; }
+
+      .stat {
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.12);
+        padding-block: 1.75rem;
+      }
+
+      .stat:last-child { border-bottom: none; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-h1 { font-size: clamp(4.5rem, 22vw, 6rem); }
+      .menu-grid { grid-template-columns: 1fr; }
+      .drinks-grid { grid-template-columns: 1fr; }
+      .order-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Ensure crisp rendering at all zoom levels */
+    @media (min-resolution: 2dppx) {
+      .card-img, .gallery-card img { image-rendering: -webkit-optimize-contrast; }
+    }
+
+    /* ═══════════════════════════════════════════════════
+       MENU CARD ANIMATION ON FILTER
+    ═══════════════════════════════════════════════════ */
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    .menu-card:not(.hidden) {
+      animation: cardIn 0.38s ease both;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════ TOAST ════════════════════ -->
+<div id="toast">
+  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--orange)" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+  <span id="toast-text">¡Perfecto!</span>
+</div>
+
+<!-- ════════════════════ NAVBAR ════════════════════ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#inicio" class="nav-logo">DONQY<em> · B&S</em></a>
+
+    <ul class="nav-links" role="list">
+      <li><a href="#menu">Menú</a></li>
+      <li><a href="#bebidas">Bebidas</a></li>
+      <li><a href="#galeria">Galería</a></li>
+      <li><a href="#ubicacion">Ubicación</a></li>
+      <li><a href="#pedir" class="nav-cta">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        Pedir ya
+      </a></li>
+    </ul>
+
+    <button class="nav-hamburger" id="hamburger" aria-label="Abrir menú" onclick="toggleDrawer()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile drawer -->
+<nav id="nav-drawer" aria-label="Navegación móvil">
+  <a href="#menu"     onclick="closeDrawer()">Menú</a>
+  <a href="#bebidas"  onclick="closeDrawer()">Bebidas</a>
+  <a href="#galeria"  onclick="closeDrawer()">Galería</a>
+  <a href="#ubicacion" onclick="closeDrawer()">Ubicación</a>
+  <a href="#pedir"    onclick="closeDrawer()">Pedir ahora →</a>
+</nav>
+
+<!-- ════════════════════ HERO ════════════════════ -->
+<section id="inicio" style="padding:0;">
+  <div id="hero">
+    <div class="hero-bg" role="img" aria-label="Burrito fresco y apetitoso"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <div class="hero-inner">
+
+        <div class="hero-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Pozuelo de Alarcón · Madrid
+        </div>
+
+        <h1 class="hero-h1">
+          DON<span class="accent">QY</span>
+        </h1>
+
+        <p class="hero-tagline">
+          Burritos & Sándwiches con alma. Recetas con carácter, ingredientes frescos y sabores que no se olvidan fácilmente.
+        </p>
+
+        <p class="hero-address">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Avenida de Europa 16 · 28224 Pozuelo de Alarcón
+        </p>
+
+        <div class="hero-actions">
+          <a href="#menu" class="btn btn-orange">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Ver el menú completo
+          </a>
+          <a href="#pedir" class="btn btn-ghost">
+            Pedir a domicilio
+          </a>
+        </div>
+
+<div class="hero-delivery">
+  <span class="hero-delivery-label">Disponible en</span>
+
+  <!-- Uber Eats -->
+  <a href="https://www.ubereats.com/es/store/donqy-pozuelo/zjMadzxTTNCrgXLhxLUCTQ?diningMode=PICKUP&ps=1" target="_blank" rel="noopener" class="platform-pill pill-uber" aria-label="Pedir en Uber Eats">
+    <span class="pill-logo">
+      <img src="https://cdn.simpleicons.org/ubereats/06C167" alt="Uber Eats" width="28" height="28" style="display: block;">
+    </span>
+    Uber Eats
+  </a>
+
+  <!-- Just Eat -->
+  <a href="https://www.just-eat.es/restaurants-donqy-pozuelo-pozuelo-de-alarcon/menu?serviceType=collection&utm_source=google&utm_medium=organic&utm_campaign=foodorder" target="_blank" rel="noopener" class="platform-pill pill-justeat" aria-label="Pedir en Just Eat">
+    <span class="pill-logo">
+      <img src="https://cdn.simpleicons.org/justeat/FF8000" alt="Just Eat" width="28" height="28" style="display: block;">
+    </span>
+    Just Eat
+  </a>
+</div>
+
+      </div><!-- /hero-inner -->
+    </div><!-- /hero-content -->
+
+    <div class="scroll-cue" aria-hidden="true">
+      <span>Scroll</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ STATS STRIP ════════════════════ -->
+<div id="stats" role="region" aria-label="Cifras DonQy">
+  <div class="stats-inner">
+    <div class="stat reveal">
+      <div class="stat-num">5</div>
+      <div class="stat-lbl">Burritos únicos</div>
+    </div>
+    <div class="stat reveal reveal-d1">
+      <div class="stat-num">4</div>
+      <div class="stat-lbl">Sándwiches</div>
+    </div>
+    <div class="stat reveal reveal-d2">
+      <div class="stat-num">100%</div>
+      <div class="stat-lbl">Ingredientes frescos</div>
+    </div>
+    <div class="stat reveal reveal-d3">
+      <div class="stat-num">★ 4.8</div>
+      <div class="stat-lbl">Valoración media</div>
+    </div>
+    <div class="stat reveal" style="transition-delay:0.4s;">
+      <div class="stat-num">2</div>
+      <div class="stat-lbl">Plataformas delivery</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ MENÚ ════════════════════ -->
+<section id="menu">
+  <div class="wrap">
+
+    <div class="reveal">
+      <span class="section-eyebrow">Lo que más gusta</span>
+      <h2 class="section-title">NUESTRO MENÚ</h2>
+      <p class="section-subtitle">Cada plato está pensado para sorprenderte. Ingredientes seleccionados, recetas con nombre propio.</p>
+    </div>
+
+    <div class="cat-tabs reveal" role="group" aria-label="Filtrar categorías">
+      <button class="cat-tab active" data-cat="all">Todo el menú</button>
+      <button class="cat-tab" data-cat="menu">Menús</button>
+      <button class="cat-tab" data-cat="entrante">Entrantes</button>
+      <button class="cat-tab" data-cat="burrito">Burritos</button>
+      <button class="cat-tab" data-cat="sandwich">Sándwiches</button>
+      <button class="cat-tab" data-cat="complemento">Complementos</button>
+      <button class="cat-tab" data-cat="postre">Postres</button>
+    </div>
+
+    <div class="menu-grid" id="menuGrid">
+
+      <!-- ── MENÚ ── -->
+      <article class="menu-card" data-cat="menu">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&q=80&auto=format" alt="Menú Burrito" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Menú Especial</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Menú Burrito</div>
+          <div class="card-desc">El combo perfecto. Burrito completo con tu elección de relleno. El favorito de los que saben.</div>
+          <div class="card-price-row">
+            <span class="card-price">10</span>
+            <span class="card-price-cents">,05 €</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── ENTRANTES ── -->
+      <article class="menu-card" data-cat="entrante">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1583339793403-3d9b001b6008?w=600&q=80&auto=format" alt="Donqymole & Chips" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Entrante</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Donqymole & Chips</div>
+          <div class="card-desc">Guacamole artesanal recién preparado con nachos crujientes. El entrante más pedido del local.</div>
+          <div class="card-price-row">
+            <span class="card-price">5</span>
+            <span class="card-price-cents">,95 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="entrante">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1578020190125-f4f7c18bc9cb?w=600&q=80&auto=format" alt="Betabel Dip" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Entrante</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Betabel Dip</div>
+          <div class="card-desc">Dip de remolacha con especias y un toque de lima. Colorido, saludable y sorprendentemente bueno.</div>
+          <div class="card-price-row">
+            <span class="card-price">4</span>
+            <span class="card-price-cents">,95 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="entrante">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1694885609862-32de65cfc6ab?w=600&q=80&auto=format" alt="Hummus Dip" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Entrante</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Hummus Dip</div>
+          <div class="card-desc">Hummus cremoso de elaboración propia con aceite de oliva virgen y pimentón ahumado.</div>
+          <div class="card-price-row">
+            <span class="card-price">4</span>
+            <span class="card-price-cents">,95 €</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── BURRITOS ── -->
+      <article class="menu-card" data-cat="burrito">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&q=80&auto=format" alt="Santana Burrito" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Burrito</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Santana Burrito</div>
+          <div class="card-desc">El clásico reinventado. Cargado de sabor con nuestra mezcla signature de especias y salsas artesanales.</div>
+          <div class="card-price-row">
+            <span class="card-price">8</span>
+            <span class="card-price-cents">,55 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="burrito">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1599974579688-8dbdd335c77f?w=600&q=80&auto=format" alt="El Charro Burrito" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Burrito</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">El Charro Burrito</div>
+          <div class="card-desc">Un burrito con carácter y mucho relleno. Para los que no se conforman con poco.</div>
+          <div class="card-price-row">
+            <span class="card-price">8</span>
+            <span class="card-price-cents">,55 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="burrito">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80&auto=format" alt="Tío Julio Burrito" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Burrito</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Tío Julio Burrito</div>
+          <div class="card-desc">Inspirado en las recetas de familia. Con el toque tradicional que lo hace irresistible.</div>
+          <div class="card-price-row">
+            <span class="card-price">8</span>
+            <span class="card-price-cents">,55 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="burrito">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1553546895-531931aa1aa8?w=600&q=80&auto=format" alt="Ranchero Burrito" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Burrito</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Ranchero Burrito</div>
+          <div class="card-desc">Sabores del rancho en cada bocado. Picante, intenso y completamente adictivo.</div>
+          <div class="card-price-row">
+            <span class="card-price">8</span>
+            <span class="card-price-cents">,55 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="burrito">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=600&q=80&auto=format" alt="Full Energy Burrito" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Burrito</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Full Energy Burrito</div>
+          <div class="card-desc">El burrito de los que no paran. Proteínas, energía y sabor garantizado para todo el día.</div>
+          <div class="card-price-row">
+            <span class="card-price">8</span>
+            <span class="card-price-cents">,55 €</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── SÁNDWICHES ── -->
+      <article class="menu-card" data-cat="sandwich">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?w=600&q=80&auto=format" alt="Imelda Sándwich" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Sándwich</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Imelda Sándwich</div>
+          <div class="card-desc">Con el nombre de quien más sabe de buen comer. Capas de sabor en pan artesano.</div>
+          <div class="card-price-row">
+            <span class="card-price">6</span>
+            <span class="card-price-cents">,55 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="sandwich">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&q=80&auto=format" alt="Donqy Cheese Sandwich" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Sándwich</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Donqy Cheese Sandwich</div>
+          <div class="card-desc">El sándwich más quesero de la casa. Fundido perfecto con nuestra mezcla de quesos seleccionados.</div>
+          <div class="card-price-row">
+            <span class="card-price">6</span>
+            <span class="card-price-cents">,55 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="sandwich">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1567234669003-dce7a7a88821?w=600&q=80&auto=format" alt="Premium Sandwich" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Sándwich</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Premium Sandwich</div>
+          <div class="card-desc">Ingredientes premium, elaboración premium. Para cuando te mereces algo fuera de lo común.</div>
+          <div class="card-price-row">
+            <span class="card-price">6</span>
+            <span class="card-price-cents">,55 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="sandwich">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1559847844-5315695dadae?w=600&q=80&auto=format" alt="Tía Rosa Sándwich" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Sándwich</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Tía Rosa Sándwich</div>
+          <div class="card-desc">El sabor de casa en formato sándwich. Un clásico con la receta secreta de siempre.</div>
+          <div class="card-price-row">
+            <span class="card-price">6</span>
+            <span class="card-price-cents">,55 €</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── COMPLEMENTOS ── -->
+      <article class="menu-card" data-cat="complemento">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&q=80&auto=format" alt="Cookie Avellanas y Chips de Chocolate" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Complemento</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Cookie Avellanas & Chips de Chocolate</div>
+          <div class="card-desc">Cookie artesana de avellanas con chips de chocolate. El tentempié ideal o el final perfecto.</div>
+          <div class="card-price-row">
+            <span class="card-price">2</span>
+            <span class="card-price-cents">,20 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="complemento">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=80&auto=format" alt="Cookie Doble Chocolate y Plátano" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Complemento</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Cookie Doble Chocolate & Plátano</div>
+          <div class="card-desc">Doble carga de chocolate con toque de plátano. Irresistible desde el primer mordisco.</div>
+          <div class="card-price-row">
+            <span class="card-price">2</span>
+            <span class="card-price-cents">,20 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="complemento">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&q=80&auto=format" alt="Cookie Zanahoria y Especias" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Complemento</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Cookie Zanahoria & Especias</div>
+          <div class="card-desc">Una cookie diferente, con notas cálidas de canela y zanahoria. Sorprendentemente buena.</div>
+          <div class="card-price-row">
+            <span class="card-price">2</span>
+            <span class="card-price-cents">,20 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="complemento">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1560717845-968823efbee1?w=600&q=80&auto=format" alt="KITU Andinos" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Complemento</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">KITU Andinos</div>
+          <div class="card-desc">Snack andino de superalimentos. El complemento más saludable y sabroso de la carta.</div>
+          <div class="card-price-row">
+            <span class="card-price">2</span>
+            <span class="card-price-cents">,95 €</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── POSTRES ── -->
+      <article class="menu-card" data-cat="postre">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=80&auto=format" alt="Pastoret Nocciola" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Postre</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Pastoret Nocciola</div>
+          <div class="card-desc">Yogur artesano con avellana y chocolate. Cremoso, natural y el cierre perfecto para tu comida.</div>
+          <div class="card-price-row">
+            <span class="card-price">3</span>
+            <span class="card-price-cents">,95 €</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card" data-cat="postre">
+        <div class="card-img-wrap">
+          <img class="card-img" src="https://images.unsplash.com/photo-1488900128323-21503983a07e?w=600&q=80&auto=format" alt="Pastoret Apple Glow" loading="lazy" width="600" height="190" />
+          <span class="card-badge">Postre</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Pastoret Apple Glow</div>
+          <div class="card-desc">Yogur artesano con manzana y notas de jengibre. Fresco, ligero y lleno de vida.</div>
+          <div class="card-price-row">
+            <span class="card-price">3</span>
+            <span class="card-price-cents">,95 €</span>
+          </div>
+        </div>
+      </article>
+
+    </div><!-- /menu-grid -->
+  </div><!-- /wrap -->
+</section>
+
+<!-- ════════════════════ BEBIDAS ════════════════════ -->
+<section id="bebidas">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="section-eyebrow">Para acompañar</span>
+      <h2 class="section-title">BEBIDAS</h2>
+      <p class="section-subtitle">Agua, refrescos, energéticas y cervezas. Tenemos todo lo que necesitas para el acompañamiento perfecto.</p>
+    </div>
+
+    <div class="drinks-grid reveal">
+      <div class="drink-item"><span class="drink-name">Agua 50cl</span><span class="drink-price">2,00 €</span></div>
+      <div class="drink-item"><span class="drink-name">Agua con gas 50cl</span><span class="drink-price">2,50 €</span></div>
+      <div class="drink-item"><span class="drink-name">Coca Cola 0,5l</span><span class="drink-price">3,00 €</span></div>
+      <div class="drink-item"><span class="drink-name">Coca Cola Zero 0,5l</span><span class="drink-price">3,00 €</span></div>
+      <div class="drink-item"><span class="drink-name">Fuze Tea Limón 0,5l</span><span class="drink-price">3,00 €</span></div>
+      <div class="drink-item"><span class="drink-name">Fanta Naranja 0,5l</span><span class="drink-price">3,00 €</span></div>
+      <div class="drink-item"><span class="drink-name">Aquarius Limón 0,5l</span><span class="drink-price">3,00 €</span></div>
+      <div class="drink-item"><span class="drink-name">Powerade 50cl</span><span class="drink-price">3,00 €</span></div>
+      <div class="drink-item"><span class="drink-name">Innocent Príncipe Azul</span><span class="drink-price">3,50 €</span></div>
+      <div class="drink-item"><span class="drink-name">Innocent Vaya Bayas</span><span class="drink-price">3,50 €</span></div>
+      <div class="drink-item"><span class="drink-name">MIWI Ginger & Lemon 25cl</span><span class="drink-price">3,50 €</span></div>
+      <div class="drink-item"><span class="drink-name">MIWI Lime & Mint 25cl</span><span class="drink-price">3,50 €</span></div>
+      <div class="drink-item"><span class="drink-name">MIWI Wild Berries 25cl</span><span class="drink-price">3,50 €</span></div>
+      <div class="drink-item"><span class="drink-name">Mahou 0,0 Tostada Lata</span><span class="drink-price">3,00 €</span></div>
+      <div class="drink-item"><span class="drink-name">Mahou Cinco Estrellas Lata</span><span class="drink-price">3,00 €</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ GALERÍA ════════════════════ -->
+<section id="galeria" style="padding:0;">
+  <div class="gallery-header reveal">
+    <span class="section-eyebrow">El ambiente</span>
+    <h2 class="section-title">UNA EXPERIENCIA<br/>DIFERENTE</h2>
+  </div>
+
+  <div class="gallery-scroll-track" role="list">
+    <div class="gallery-card" role="listitem">
+      <img src="https://images.unsplash.com/photo-1615361200141-f45040f367be?w=700&q=80&auto=format" alt="Burrito artesano" loading="lazy" width="700" height="420" />
+      <div class="gallery-card-caption">Burritos artesanos</div>
+    </div>
+    <div class="gallery-card" role="listitem">
+      <img src="https://images.unsplash.com/photo-1561651823-34feb02250e4?w=700&q=80&auto=format" alt="Sándwich premium" loading="lazy" width="700" height="420" />
+      <div class="gallery-card-caption">Sándwiches premium</div>
+    </div>
+    <div class="gallery-card" role="listitem">
+      <img src="https://images.unsplash.com/photo-1583339793403-3d9b001b6008?w=700&q=80&auto=format" alt="Entrantes frescos" loading="lazy" width="700" height="420" />
+      <div class="gallery-card-caption">Entrantes frescos</div>
+    </div>
+    <div class="gallery-card" role="listitem">
+      <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=700&q=80&auto=format" alt="Ambiente" loading="lazy" width="700" height="420" />
+      <div class="gallery-card-caption">Ambiente acogedor</div>
+    </div>
+    <div class="gallery-card" role="listitem">
+      <img src="https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=700&q=80&auto=format" alt="Bebidas" loading="lazy" width="700" height="420" />
+      <div class="gallery-card-caption">Bebidas seleccionadas</div>
+    </div>
+    <div class="gallery-card" role="listitem">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80&auto=format" alt="Postres artesanos" loading="lazy" width="700" height="420" />
+      <div class="gallery-card-caption">Postres artesanos</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ PEDIR ════════════════════ -->
+<section id="pedir">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="section-eyebrow">Donde quieras, cuando quieras</span>
+      <h2 class="section-title">PÍDENOS<br/>AHORA</h2>
+      <p class="section-subtitle">Disponible para recogida y a domicilio. Elige cómo quieres recibirlo: Uber Eats, Just Eat o directamente por WhatsApp.</p>
+    </div>
+
+    <div class="order-grid">
+
+      <!-- Uber Eats -->
+      <a href="https://www.ubereats.com/es/store/donqy-pozuelo/zjMadzxTTNCrgXLhxLUCTQ?diningMode=PICKUP&ps=1&utm_campaign=CM2508147-search-free-nonbrand-google-pas_e_all_acq_Global&utm_medium=search-free-nonbrand&utm_source=google-pas"
+         target="_blank" rel="noopener noreferrer"
+         class="order-card oc-uber reveal"
+         aria-label="Pedir en Uber Eats">
+        <div class="oc-top">
+          <div class="oc-icon-wrap">
+  <img src="https://cdn.simpleicons.org/ubereats/ffffff" alt="Uber Eats" width="52" height="52" style="display: block;">
+</div>
+          <div>
+            <div class="oc-label">Delivery & Pickup</div>
+            <div class="oc-brand">Uber Eats</div>
+          </div>
+        </div>
+        <p class="oc-desc">Recibe tu pedido en casa o recógelo en el local. Seguimiento en tiempo real y pago seguro en la plataforma.</p>
+        <span class="oc-cta">
+          Abrir en Uber Eats
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </span>
+      </a>
+
+      <!-- Just Eat -->
+      <a href="https://www.just-eat.es/restaurants-donqy-pozuelo-pozuelo-de-alarcon/menu?serviceType=collection&utm_source=google&utm_medium=organic&utm_campaign=foodorder"
+         target="_blank" rel="noopener noreferrer"
+         class="order-card oc-justeat reveal reveal-d1"
+         aria-label="Pedir en Just Eat">
+        <div class="oc-top">
+          <div class="oc-icon-wrap">
+  <img src="https://cdn.simpleicons.org/justeat/ffffff" alt="Just Eat" width="52" height="52" style="display: block;">
+</div>
+          <div>
+            <div class="oc-label">Delivery & Recogida</div>
+            <div class="oc-brand">Just Eat</div>
+          </div>
+        </div>
+        <p class="oc-desc">Explora el menú completo y haz tu pedido con pocos clics. Disponible para recoger en local o a domicilio.</p>
+        <span class="oc-cta">
+          Abrir en Just Eat
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </span>
+      </a>
+
+      <!-- WhatsApp -->
+      <a href="https://wa.me/34690826390?text=Hola%20DonQy!%20Me%20gustar%C3%ADa%20hacer%20un%20pedido%20%F0%9F%8C%AF"
+         target="_blank" rel="noopener noreferrer"
+         class="order-card oc-whatsapp reveal reveal-d2"
+         aria-label="Contactar por WhatsApp">
+        <div class="oc-top">
+          <div class="oc-icon-wrap">
+  <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="WhatsApp" width="52" height="52" style="display: block;">
+</div>
+          <div>
+            <div class="oc-label">Contacto directo</div>
+            <div class="oc-brand">WhatsApp</div>
+          </div>
+        </div>
+        <p class="oc-desc">Escríbenos directamente y te atendemos al momento. También puedes llamar al <strong style="color:#fff;">+34 690 826 390</strong>.</p>
+        <span class="oc-cta">
+          Abrir WhatsApp
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </span>
+      </a>
+
+    </div><!-- /order-grid -->
+  </div><!-- /wrap -->
+</section>
+
+<!-- ════════════════════ UBICACIÓN ════════════════════ -->
+<section id="ubicacion">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="section-eyebrow">Encuéntranos</span>
+      <h2 class="section-title">DÓNDE ESTAMOS</h2>
+    </div>
+
+    <div class="location-grid">
+
+      <div class="loc-info-list reveal">
+
+        <div class="loc-info-item">
+          <div class="loc-info-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div class="loc-info-text">
+            <strong>Dirección</strong>
+            <span>Avenida de Europa 16<br/>28224 Pozuelo de Alarcón, Madrid</span>
+          </div>
+        </div>
+
+        <div class="loc-info-item">
+          <div class="loc-info-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          </div>
+          <div class="loc-info-text">
+            <strong>Teléfono & WhatsApp</strong>
+            <span>+34 690 826 390</span>
+          </div>
+        </div>
+
+        <div class="loc-info-item">
+          <div class="loc-info-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <div class="loc-info-text">
+            <strong>Email</strong>
+            <span>ivan@healthypoke.com</span>
+          </div>
+        </div>
+
+        <div class="loc-info-item">
+          <div class="loc-info-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div class="loc-info-text">
+            <strong>Horario estimado</strong>
+            <span>Lun – Vie: 12:00 – 16:00 · 19:00 – 22:30<br/>Sáb: 12:00 – 22:30</span>
+          </div>
+        </div>
+
+        <div class="loc-action-row">
+          <a href="https://wa.me/34690826390?text=Hola%20DonQy!" target="_blank" rel="noopener" class="btn btn-orange">
+            <!-- WhatsApp icon inline -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+          <a href="tel:+34690826390" class="btn btn-ghost">Llamar</a>
+          <a href="mailto:ivan@healthypoke.com" class="btn btn-ghost">Email</a>
+        </div>
+
+      </div><!-- /loc-info-list -->
+
+      <div class="map-wrap reveal reveal-d1">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3036.888!2d-3.78384!3d40.43268!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd41879ac0d19e8b%3A0x0!2sAv.%20de%20Europa%2016%2C%2028224%20Pozuelo%20de%20Alarc%C3%B3n%2C%20Madrid!5e0!3m2!1ses!2ses!4v1700000000000!5m2!1ses!2ses"
+          title="Ubicación de DonQy en Pozuelo de Alarcón"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+    </div><!-- /location-grid -->
+  </div><!-- /wrap -->
+</section>
+
+<!-- ════════════════════ CTA BANNER ════════════════════ -->
+<div id="cta-banner" role="region" aria-label="Llamada a la acción">
+  <div class="cta-inner">
+    <h2 class="reveal">¿TIENES<br/>HAMBRE?</h2>
+    <p class="reveal reveal-d1">Recogida en local o a domicilio. En minutos tienes DonQy donde estés. Pide por Uber Eats, Just Eat o por WhatsApp.</p>
+    <div class="cta-btns reveal reveal-d2">
+      <a href="https://www.ubereats.com/es/store/donqy-pozuelo/zjMadzxTTNCrgXLhxLUCTQ?diningMode=PICKUP&ps=1" target="_blank" rel="noopener" class="btn btn-white">
+        Pedir en Uber Eats
+      </a>
+      <a href="https://www.just-eat.es/restaurants-donqy-pozuelo-pozuelo-de-alarcon/menu?serviceType=collection" target="_blank" rel="noopener" class="btn btn-white-ghost">
+        Pedir en Just Eat
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ FOOTER ════════════════════ -->
+<footer>
+  <div class="footer-inner">
+
+    <div class="footer-logo">DONQY<span> · B&amp;S</span></div>
+
+    <ul class="footer-nav" role="list">
+      <li><a href="#menu">Menú</a></li>
+      <li><a href="#bebidas">Bebidas</a></li>
+      <li><a href="#galeria">Galería</a></li>
+      <li><a href="#pedir">Pedir</a></li>
+      <li><a href="#ubicacion">Ubicación</a></li>
+    </ul>
+
+    <div class="footer-socials">
+      <a href="https://wa.me/34690826390" target="_blank" rel="noopener" class="social-icon" aria-label="WhatsApp">
+  <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="WhatsApp" width="18" height="18" style="display: block;">
+</a>
+      <a href="tel:+34690826390" class="social-icon" aria-label="Teléfono">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+      </a>
+      <a href="mailto:ivan@healthypoke.com" class="social-icon" aria-label="Email">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      </a>
+    </div>
+
+    <p class="footer-copy">© 2025 DonQy – Burritos & Sandwiches · Pozuelo de Alarcón, Madrid</p>
+
+    <p class="footer-legal">
+      Este sitio es una propuesta de demostración desarrollada por un freelance. Las imágenes son referencias visuales y serán reemplazadas por fotografías reales del restaurante si el cliente decide continuar. Este comerciante certifica que sus productos cumplen con la legislación vigente.
+    </p>
+
+  </div>
+</footer>
+
+<!-- ════════════════════ JAVASCRIPT ════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── Navbar scroll ── */
+  var navbar = document.getElementById('navbar');
+  var lastY = 0;
+
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY;
+    navbar.classList.toggle('scrolled', y > 60);
+    lastY = y;
+  }, { passive: true });
+
+  /* ── Hamburger / drawer ── */
+  var hamburger = document.getElementById('hamburger');
+  var drawer    = document.getElementById('nav-drawer');
+  var open      = false;
+
+  function toggleDrawer() {
+    open = !open;
+    hamburger.classList.toggle('open', open);
+    drawer.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  function closeDrawer() {
+    open = false;
+    hamburger.classList.remove('open');
+    drawer.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  window.toggleDrawer = toggleDrawer;
+  window.closeDrawer  = closeDrawer;
+
+  drawer.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', closeDrawer);
+  });
+
+  /* ── Scroll reveal ── */
+  var revealEls = document.querySelectorAll('.reveal');
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* ── Menu category filter ── */
+  var tabs  = document.querySelectorAll('.cat-tab');
+  var cards = document.querySelectorAll('.menu-card');
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+
+      var cat = tab.dataset.cat;
+      var delay = 0;
+
+      cards.forEach(function (card) {
+        var matches = cat === 'all' || card.dataset.cat === cat;
+
+        if (matches) {
+          card.classList.remove('hidden');
+          card.style.animationDelay = (delay * 0.045) + 's';
+          delay++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  /* ── Toast helper (kept for potential future use, not triggered by any user action) ── */
+  var toast    = document.getElementById('toast');
+  var toastTxt = document.getElementById('toast-text');
+  var toastTimer;
+
+  window.showToast = function (msg) {
+    clearTimeout(toastTimer);
+    toastTxt.textContent = msg;
+    toast.classList.add('show');
+    toastTimer = setTimeout(function () {
+      toast.classList.remove('show');
+    }, 3000);
+  };
+
+  /* ── Smooth anchor scroll (older browsers) ── */
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      closeDrawer();
+      var offset = target.getBoundingClientRect().top + window.scrollY - 68;
+      window.scrollTo({ top: offset, behavior: 'smooth' });
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
